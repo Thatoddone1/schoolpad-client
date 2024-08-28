@@ -12,7 +12,7 @@ ssl_context = ssl.create_default_context()
 requests = adafruit_requests.Session(pool, ssl_context=ssl_context)
 
 # Define your API URL
-api_url = os.get("WEBCAL")
+api_url = os.getenv("WEBCAL")
 
 def fetch_events():
     print("Fetching events...")
