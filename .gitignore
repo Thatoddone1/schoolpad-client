@@ -1,0 +1,10 @@
+settings.toml
+._*
+ical.txt
+boot_out.txt
+test_results.txt
+.Trash*
+.metadata_never_index
+.vscode
+.fseventsd
+__pycache__
