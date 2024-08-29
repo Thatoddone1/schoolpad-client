@@ -8,3 +8,4 @@ test_results.txt
 .vscode
 .fseventsd
 __pycache__
+.DS_Store

@@ -9,7 +9,6 @@ import alarm
 
 
 
-
 # Button setup
 button_a = digitalio.DigitalInOut(board.D9)  # Button A pin
 button_a.direction = digitalio.Direction.INPUT
