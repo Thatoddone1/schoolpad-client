@@ -49,11 +49,16 @@ def display_event(event, current_pos):
     current_time = rtc_instance.datetime
     current_datetime = datetime(current_time.tm_year, current_time.tm_mon, current_time.tm_mday, 
                                 current_time.tm_hour, current_time.tm_min, current_time.tm_sec)
+    
     time_until=parsed_start - current_datetime
     total_seconds = int(time_until.total_seconds())
     minutes = total_seconds // 60
+    if minutes < 0:
+        time_until=parsed_end - current_datetime
+        total_seconds = int(time_until.total_seconds())
+        minutes = total_seconds // 60
     seconds = total_seconds % 60
-    display_text([wrapped_text[0], start, end, date, f"{minutes} min {seconds} seconds until"])
+    display_text([wrapped_text[0], start, end, date, f"{minutes} min {seconds} seconds"])
 
 
 # Function to wrap text

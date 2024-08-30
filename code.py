@@ -24,7 +24,7 @@ button_b.pull = digitalio.Pull.UP  # Use pull-up resistor
 
 
 
-# Connect to Wi-Fi and Event Processing
+# Wi-Fi and Event Processing
 display_text([f"SchoolPad v.{version}", "Joshua Industries", "Connecting to WiFi..."])
 if connect_to_wifi():
     set_time_from_ntp()
@@ -110,12 +110,17 @@ while True:
         sleep= 0
         refresh = 0
         time.sleep(0.2)  # Debounce delay
-
+# state checking
     last_button_a_state = current_button_a_state
     last_button_c_state = current_button_c_state
     last_button_b_state = current_button_b_state
+
+
+#timers
     sleep = sleep + 1
     refresh = refresh + 1
+
+#timer checks
     if sleep >= 3000:
         button_a.deinit()
         alarm1 = alarm.pin.PinAlarm(pin=board.D9, value=False, pull=False)
@@ -123,7 +128,10 @@ while True:
         display.sleep()
         sleep = 0
         alarm.exit_and_deep_sleep_until_alarms(alarm1)
-    time.sleep(0.1)  # Short delay to avoid busy-waiting
+
+
     if refresh >= 10:
         display_event(filtered_events[current_pos], current_pos)
         refresh = 0
+
+    time.sleep(0.1)  # Short delay to avoid busy-waiting
