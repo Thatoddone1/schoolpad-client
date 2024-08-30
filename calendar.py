@@ -98,7 +98,7 @@ def filter_events(parsed_events):
     rtc_instance = rtc.RTC()
     current_time = rtc_instance.datetime
     current_datetime = datetime(current_time.tm_year, current_time.tm_mon, current_time.tm_mday, 
-                                current_time.tm_hour, current_time.tm_min, current_time.tm_sec)
+                                0, 0, 0)
     one_week_future = current_datetime + timedelta(days=7)
 
     print(f"Current datetime: {current_datetime}")
