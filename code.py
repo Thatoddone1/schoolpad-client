@@ -71,6 +71,11 @@ if total_events > 0:
     display_event(filtered_events[current_pos], current_pos)
 else:
     display_text(wrap_text("No Events in next week", CHARS_PER_LINE))
+    button_a.deinit()
+    pinalarm1 = alarm.pin.PinAlarm(pin=board.D9, value=False, pull=False)
+    clear_display()
+    display.sleep()
+    alarm.exit_and_deep_sleep_until_alarms(pinalarm1)
     while True:
         pass
 # Track button states
