@@ -3,3 +3,6 @@
 .Trashes
 lib
 sd
+ical.txt
+._*
+_*

@@ -43,8 +43,8 @@ def display_event(event, current_pos):
     wrapped_text = wrap_text(f"{current_pos}. " + event["SUMMARY"], CHARS_PER_LINE)
     parsed_start = parse_datetime(event["DTSTART"])
     parsed_end = parse_datetime(event["DTEND"])
-    start = f"{parsed_start.hour}:{parsed_start.minute}"
-    end = f"{parsed_end.hour}:{parsed_end.minute}"
+    start = f"{parsed_start.hour:02d}:{parsed_start.minute:02d}"
+    end = f"{parsed_end.hour:02d}:{parsed_end.minute:02d}"
     date = f"{parsed_start.month}/{parsed_start.day}"
     current_time = rtc_instance.datetime
     current_datetime = datetime(current_time.tm_year, current_time.tm_mon, current_time.tm_mday, 
@@ -58,7 +58,10 @@ def display_event(event, current_pos):
         total_seconds = int(time_until.total_seconds())
         minutes = total_seconds // 60
     seconds = total_seconds % 60
-    display_text([wrapped_text[0], start, end, date, f"{minutes} min {seconds} seconds"])
+    try:
+        display_text([wrapped_text[0], wrapped_text[1], start, end, date, f"{minutes} min {seconds} seconds"])
+    except:
+        display_text([wrapped_text[0], start, end, date, f"{minutes} min {seconds} seconds"])
 
 
 # Function to wrap text

@@ -5,6 +5,7 @@ from calendar import fetch_events, filter_events, parse_datetime, parse_ical, so
 from network import connect_to_wifi, set_time_from_ntp
 from version import version
 from display import display_text, display_event, wrap_text, clear_display, display, CHARS_PER_LINE
+from feathers3 import get_battery_voltage
 import alarm
 
 wifi = False
@@ -25,7 +26,7 @@ button_b.pull = digitalio.Pull.UP  # Use pull-up resistor
 
 
 # Wi-Fi and Event Processing
-display_text([f"SchoolPad v.{version}", "Joshua Industries", "Connecting to WiFi..."])
+display_text([f"SchoolPad v.{version}", "Joshua Industries", "Connecting to WiFi...", "voltage: " + str(get_battery_voltage())])
 if connect_to_wifi():
     wifi=True
     set_time_from_ntp()
@@ -145,11 +146,26 @@ while True:
 #timer checks
     if sleep >= 3000:
         button_a.deinit()
-        alarm1 = alarm.pin.PinAlarm(pin=board.D9, value=False, pull=False)
         clear_display()
         display.sleep()
-        sleep = 0
-        alarm.exit_and_deep_sleep_until_alarms(alarm1)
+        alarm1 = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + 60)
+        pinalarm2 = alarm.pin.PinAlarm(pin=board.D9, value=False, pull=False)
+        alarm.light_sleep_until_alarms(alarm1, pinalarm2)
+        if alarm.wake_alarm == alarm1:
+            button_a.deinit()
+            pinalarm1 = alarm.pin.PinAlarm(pin=board.D9, value=False, pull=False)
+            clear_display()
+            display.sleep()
+            sleep = 0
+            alarm.exit_and_deep_sleep_until_alarms(pinalarm1)
+        else:
+            display.wake()
+            button_a = digitalio.DigitalInOut(board.D9)  # Button A pin
+            button_a.direction = digitalio.Direction.INPUT
+            button_a.pull = digitalio.Pull.UP  # Use pull-up resistor
+            current_pos = current_pos + 1
+            sleep = 0
+            refresh = 0
 
 
     if refresh >= 10:
