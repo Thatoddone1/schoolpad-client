@@ -12,7 +12,7 @@ import neopixel
 wifi = False
 
 pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
-pixel.fill(0,255,0)
+pixel.fill([0,255,0])
 
 # Button setup
 button_a = digitalio.DigitalInOut(board.D9)  # Button A pin
