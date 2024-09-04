@@ -7,8 +7,12 @@ from version import version
 from display import display_text, display_event, wrap_text, clear_display, display, CHARS_PER_LINE
 from feathers3 import get_battery_voltage
 import alarm
+import neopixel
 
 wifi = False
+
+pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
+pixel.fill(0,255,0)
 
 # Button setup
 button_a = digitalio.DigitalInOut(board.D9)  # Button A pin
@@ -71,6 +75,7 @@ if total_events > 0:
     display_event(filtered_events[current_pos], current_pos)
 else:
     display_text(wrap_text("No Events in next week", CHARS_PER_LINE))
+    time.sleep(1)
     button_a.deinit()
     pinalarm1 = alarm.pin.PinAlarm(pin=board.D9, value=False, pull=False)
     clear_display()
