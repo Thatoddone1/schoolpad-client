@@ -30,36 +30,10 @@ button_b.pull = digitalio.Pull.UP  # Use pull-up resistor
 
 
 # Wi-Fi and Event Processing
-display_text([f"SchoolPad v.{version}", "Joshua Industries", "Connecting to WiFi...", "voltage: " + str(get_battery_voltage())])
-if connect_to_wifi():
-    wifi=True
-    set_time_from_ntp()
-
-    display_text([f"SchoolPad v.{version}", "Joshua Industries", "Fetching Events..."])
-    fetched_ical = fetch_events()
-    print("Events fetched")
-
-    display_text([f"SchoolPad v.{version}", "Joshua Industries", "Parsing Events..."])
-    parsed_ical = parse_ical(fetched_ical)
-    sorted_ical = sort_events(parsed_ical)
-    filtered_events = filter_events(sorted_ical)
-    print("Events filtered")
-else:
-    display_text(["WiFi Connection Failed"])
-    wifi=False
-    time.sleep(0.5)
-    display_text([f"SchoolPad v.{version}", "Joshua Industries", "Parsing Events..."])
-    try:
-        f = open("ical.txt", "r")
-        fetched_ical = f.read()
-        f.close()
-    except:
-        display_text(["Read Error. Reboot and contact support."])
-        while True:
-            continue
-    parsed_ical = parse_ical(fetched_ical)
-    sorted_ical = sort_events(parsed_ical)
-    filtered_events = filter_events(sorted_ical)
+display_text([f"SchoolPad v.{version}", "Joshua Industries", "Quick Boot Started", "voltage: " + str(get_battery_voltage())])
+f = open("parsed_ical.txt", "r")
+filtered_events = f.read()
+wifi = False
 
 
 
@@ -114,29 +88,66 @@ while True:
         if wifi:
             display_text([f"SchoolPad v.{version}", "Joshua Industries", "Fetching Events..."])
             try:
-                fetched = fetch_events()  # Refresh events
-            except:
-                f = open("ical.txt", "r")
-                fetched_ical = f.read()
+                fetched_ical = fetch_events()
+                f = open("ical.txt", "w")
+                f.write(fetched_ical)
                 f.close()
-                wifi=False
+                parsed_ical = parse_ical(fetched_ical)
+                sorted_ical = sort_events(parsed_ical)
+                filtered_events = filter_events(sorted_ical)  # Refresh events
+                f = open("filtered_ical.txt", "w")
+                f.write(filtered_events)
+                f.close()
+                set_time_from_ntp()
+            except:
+                try:
+                    f = open("filtered_ical.txt", "r")
+                    filtered_events = f.read()
+                    f.close()
+                    wifi = False
+                except:
+                    f = open("ical.txt", "r")
+                    fetched_ical = f.read()
+                    f.close()
+                    display_text([f"SchoolPad v.{version}", "Joshua Industries", "Parsing Events..."])
+                    parsed_ical = parse_ical(fetched_ical)
+                    sorted_ical = sort_events(parsed_ical)
+                    filtered_events = filter_events(sorted_ical)
+                    wifi=False
 
             print("Events fetched")
         else:
             if connect_to_wifi():
                 display_text([f"SchoolPad v.{version}", "Joshua Industries", "Fetching Events..."])
-                fetched = fetch_events()  # Refresh events
+                fetched_ical = fetch_events()  # Refresh events
                 print("Events fetched")
-                wifi=True
-            else:
-                f = open("ical.txt", "r")
-                fetched_ical = f.read()
+                f = open("ical.txt", "w")
+                f.write(fetched_ical)
                 f.close()
-                wifi=False
-        display_text([f"SchoolPad v.{version}", "Joshua Industries", "Parsing Events..."])
-        parsed_ical = parse_ical(fetched_ical)
-        filtered_events = filter_events(parsed_ical)
-        print("Events parsed")
+                parsed_ical = parse_ical(fetched_ical)
+                sorted_ical = sort_events(parsed_ical)
+                filtered_events = filter_events(sorted_ical)  # Refresh events
+                f = open("filtered_ical.txt", "w")
+                f.write(filtered_events)
+                f.close()
+                wifi=True
+                set_time_from_ntp()
+            else:
+                try:
+                    f = open("filtered_ical.txt", "r")
+                    filtered_events = f.read()
+                    f.close()
+                    wifi=False
+                except:
+                    f = open("ical.txt", "r")
+                    fetched_ical = f.read()
+                    display_text([f"SchoolPad v.{version}", "Joshua Industries", "Parsing Events..."])
+                    parsed_ical = parse_ical(fetched_ical)
+                    sorted_ical = sort_events(parsed_ical)
+                    filtered_events = filter_events(sorted_ical)
+                    print("Events parsed")
+                    f.close()
+                    wifi=False
         total_events = len(filtered_events)
         if total_events > 0:
             display_event(filtered_events[current_pos],current_pos)
