@@ -21,6 +21,7 @@ def connect_to_wifi():
                 break
         if not SSID:
             raise ValueError("No Wifi Detected")
+        wifi.radio.stop_scanning_networks() 
     except Exception as e:
         print(f"Failed to connect to WiFi: {e}")
     try:
@@ -33,6 +34,7 @@ def connect_to_wifi():
     PASSWORD,  # This might be the user password or a specific network password
     )
         return True
+
     except Exception as e:
         print(f"Failed to connect to WiFi: {e}")
         return False

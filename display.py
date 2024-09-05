@@ -58,10 +58,16 @@ def display_event(event, current_pos):
         total_seconds = int(time_until.total_seconds())
         minutes = total_seconds // 60
     seconds = total_seconds % 60
-    try:
-        display_text([wrapped_text[0], wrapped_text[1], start, end, date, f"{minutes} min {seconds} seconds"])
-    except:
-        display_text([wrapped_text[0], start, end, date, f"{minutes} min {seconds} seconds"])
+    if parsed_end.hour == 0 and parsed_end.minute == 0 and parsed_start.hour == 0 and parsed_start.minute == 0:
+        try:
+            display_text([wrapped_text[0], wrapped_text[1], "All Day"])
+        except:
+            display_text([wrapped_text[0], "All Day"])
+    else:
+        try:
+            display_text([wrapped_text[0], wrapped_text[1], start, end, date, f"{minutes} min {seconds} seconds"])
+        except:
+            display_text([wrapped_text[0], start, end, date, f"{minutes} min {seconds} seconds"])
 
 
 # Function to wrap text

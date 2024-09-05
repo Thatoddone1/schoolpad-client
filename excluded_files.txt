@@ -4,5 +4,6 @@
 lib
 sd
 ical.txt
+filtered_ical.json
 ._*
 _*

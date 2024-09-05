@@ -8,6 +8,7 @@ from display import display_text, display_event, wrap_text, clear_display, displ
 from feathers3 import get_battery_voltage
 import alarm
 import neopixel
+import json
 
 wifi = False
 
@@ -27,14 +28,30 @@ button_b = digitalio.DigitalInOut(board.D6)  # Button B pin (for refreshing even
 button_b.direction = digitalio.Direction.INPUT
 button_b.pull = digitalio.Pull.UP  # Use pull-up resistor
 
+display_text([f"SchoolPad v.{version}", "Joshua Industries", "Connecting to Wifi", "Setting time NTP", "voltage: " + str(get_battery_voltage())])
 
+if connect_to_wifi():
+    set_time_from_ntp()
+    wifi=True
 
 # Wi-Fi and Event Processing
 display_text([f"SchoolPad v.{version}", "Joshua Industries", "Quick Boot Started", "voltage: " + str(get_battery_voltage())])
-f = open("parsed_ical.txt", "r")
-filtered_events = f.read()
-wifi = False
-
+try:
+    f = open("filtered_ical.json", "r")
+    filtered_events = json.loads(f.read())
+    wifi = False
+except:
+    f = open("ical.txt", "r")
+    fetched_ical = f.read()
+    f.close()
+    display_text([f"SchoolPad v.{version}", "Joshua Industries", "Quick Boot Fail", "Parsing Events..."])
+    parsed_ical = parse_ical(fetched_ical)
+    sorted_ical = sort_events(parsed_ical)
+    filtered_events = filter_events(sorted_ical)
+    f = open("filtered_ical.json", "w")
+    f.write(json.dumps(filtered_events))
+    f.close()
+    wifi=False
 
 
 # Initialize current position
@@ -95,14 +112,14 @@ while True:
                 parsed_ical = parse_ical(fetched_ical)
                 sorted_ical = sort_events(parsed_ical)
                 filtered_events = filter_events(sorted_ical)  # Refresh events
-                f = open("filtered_ical.txt", "w")
-                f.write(filtered_events)
+                f = open("filtered_ical.json", "w")
+                f.write(json.dumps(filtered_events))
                 f.close()
                 set_time_from_ntp()
             except:
                 try:
-                    f = open("filtered_ical.txt", "r")
-                    filtered_events = f.read()
+                    f = open("filtered_ical.json", "r")
+                    filtered_events = json.loads(f.read())
                     f.close()
                     wifi = False
                 except:
@@ -127,15 +144,15 @@ while True:
                 parsed_ical = parse_ical(fetched_ical)
                 sorted_ical = sort_events(parsed_ical)
                 filtered_events = filter_events(sorted_ical)  # Refresh events
-                f = open("filtered_ical.txt", "w")
-                f.write(filtered_events)
+                f = open("filtered_ical.json", "w")
+                f.write(json.dumps(filtered_events))
                 f.close()
                 wifi=True
                 set_time_from_ntp()
             else:
                 try:
-                    f = open("filtered_ical.txt", "r")
-                    filtered_events = f.read()
+                    f = open("filtered_ical.json", "r")
+                    filtered_events = json.loads(f.read())
                     f.close()
                     wifi=False
                 except:
