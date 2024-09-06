@@ -1,6 +1,7 @@
 settings.toml
 ._*
 ical.txt
+filtered_ical.json
 boot_out.txt
 test_results.txt
 .Trash*

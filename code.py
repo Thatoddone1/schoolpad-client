@@ -9,6 +9,7 @@ from feathers3 import get_battery_voltage
 import alarm
 import neopixel
 import json
+import rtc
 
 wifi = False
 
@@ -27,12 +28,14 @@ button_c.pull = digitalio.Pull.UP  # Use pull-up resistor
 button_b = digitalio.DigitalInOut(board.D6)  # Button B pin (for refreshing events)
 button_b.direction = digitalio.Direction.INPUT
 button_b.pull = digitalio.Pull.UP  # Use pull-up resistor
-
+rtc_instance = rtc.RTC
+#if rtc_instance.datetime.tm_year == 2000:
 display_text([f"SchoolPad v.{version}", "Joshua Industries", "Connecting to Wifi", "Setting time NTP", "voltage: " + str(get_battery_voltage())])
-
 if connect_to_wifi():
     set_time_from_ntp()
     wifi=True
+#    else:
+#        display_text(["Time protocol faliure", "Get near programmed wifi", "and click Reset Button"])
 
 # Wi-Fi and Event Processing
 display_text([f"SchoolPad v.{version}", "Joshua Industries", "Quick Boot Started", "voltage: " + str(get_battery_voltage())])
@@ -103,7 +106,7 @@ while True:
 
     if not current_button_b_state and last_button_b_state:  # Button B is pressed
         if wifi:
-            display_text([f"SchoolPad v.{version}", "Joshua Industries", "Fetching Events..."])
+            display_text([f"SchoolPad v.{version}", "Joshua Industries", "Refreshing Event Lists..."])
             try:
                 fetched_ical = fetch_events()
                 f = open("ical.txt", "w")
@@ -135,7 +138,7 @@ while True:
             print("Events fetched")
         else:
             if connect_to_wifi():
-                display_text([f"SchoolPad v.{version}", "Joshua Industries", "Fetching Events..."])
+                display_text([f"SchoolPad v.{version}", "Joshua Industries", "Refreshing Event Lists..."])
                 fetched_ical = fetch_events()  # Refresh events
                 print("Events fetched")
                 f = open("ical.txt", "w")
