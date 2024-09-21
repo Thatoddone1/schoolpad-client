@@ -10,3 +10,5 @@ test_results.txt
 .fseventsd
 __pycache__
 .DS_Store
+.git
+sd

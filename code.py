@@ -34,6 +34,7 @@ display_text([f"SchoolPad v.{version}", "Joshua Industries", "Connecting to Wifi
 if connect_to_wifi():
     set_time_from_ntp()
     wifi=True
+    print("wifi success")
 #    else:
 #        display_text(["Time protocol faliure", "Get near programmed wifi", "and click Reset Button"])
 
@@ -44,9 +45,15 @@ try:
     filtered_events = json.loads(f.read())
     wifi = False
 except:
-    f = open("ical.txt", "r")
-    fetched_ical = f.read()
-    f.close()
+    try:
+        f = open("ical.txt", "r")
+        fetched_ical = f.read()
+        f.close()
+    except:
+        fetched_ical = fetch_events()
+        f = open("ical.txt", "w")
+        f.write(fetched_ical)
+        f.close()
     display_text([f"SchoolPad v.{version}", "Joshua Industries", "Quick Boot Fail", "Parsing Events..."])
     parsed_ical = parse_ical(fetched_ical)
     sorted_ical = sort_events(parsed_ical)
