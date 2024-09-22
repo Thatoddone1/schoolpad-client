@@ -21,7 +21,7 @@ def connect_to_wifi():
                 break
         if not SSID:
             raise ValueError("No Wifi Detected")
-        wifi.radio.stop_scanning_networks() 
+        wifi.radio.stop_scanning_networks()
     except Exception as e:
         print(f"Failed to connect to WiFi: {e}")
     try:
@@ -56,3 +56,11 @@ def set_time_from_ntp():
             print(f"Failed to get time, status code: {response.status_code}")
     except Exception as e:
         print(f"Exception occurred while setting time: {e}")
+
+def is_wifi_connected():
+    return wifi.radio.connected
+
+def refresh_wifi_if_needed():
+    if not is_wifi_connected():
+        return connect_to_wifi()
+    return True
