@@ -9,6 +9,8 @@ from feathers3 import get_battery_voltage
 import alarm
 import json
 import rtc
+
+
 print(rtc.RTC().datetime)
 if rtc.RTC().datetime.tm_year==2000:
     display_text([f"SchoolPad v.{version}", "Joshua Industries", "Wifi Connecting", "voltage: " + str(get_battery_voltage())])
