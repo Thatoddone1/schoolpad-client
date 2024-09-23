@@ -87,6 +87,7 @@ def button_deinit():
     button_c.deinit()
 
 def button_reinit():
+    global button_a, button_b, button_c
     button_a = digitalio.DigitalInOut(board.D9)  # Button A pin
     button_a.direction = digitalio.Direction.INPUT
     button_a.pull = digitalio.Pull.UP  # Use pull-up resistor
