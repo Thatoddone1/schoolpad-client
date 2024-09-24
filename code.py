@@ -6,6 +6,7 @@ from network import connect_to_wifi, set_time_from_ntp, is_wifi_connected, refre
 from version import version
 from display import display_text, display_event, wrap_text, clear_display, display, CHARS_PER_LINE
 from feathers3 import get_battery_voltage
+from sleep import enter_deep_sleep_mode, enter_light_sleep_mode
 import alarm
 import json
 import rtc
@@ -66,23 +67,7 @@ else:
 total_events = len(filtered_events)
 
 
-def enter_deep_sleep_mode(current_pos):
-    clear_display()
-    display.sleep()
-    alarm.sleep_memory[1] = True
-    alarm.sleep_memory[0] = current_pos
-    pinalarm1 = alarm.pin.PinAlarm(pin=board.D9, value=False, pull=False)
-    alarm.exit_and_deep_sleep_until_alarms(pinalarm1)
-def enter_light_sleep_mode():
-    clear_display()
-    display.sleep()
-    alarm1 = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + 60)
-    pinalarm2 = alarm.pin.PinAlarm(pin=board.D9, value=False, pull=False)
-    alarm.light_sleep_until_alarms(alarm1, pinalarm2)
-    if alarm.wake_alarm == alarm1:
-        return True
-    else:
-        return False
+
 def button_deinit():
     button_a.deinit()
     button_b.deinit()
