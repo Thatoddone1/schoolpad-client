@@ -1,6 +1,7 @@
 from display import display, clear_display
 import alarm
 import board
+import time
 
 def enter_deep_sleep_mode(current_pos):
     clear_display()
