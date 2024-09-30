@@ -18,7 +18,7 @@ if rtc.RTC().datetime.tm_year==2000:
     if connect_to_wifi():
         set_time_from_ntp()
 
-SLEEP_TIMEOUT = 30
+SLEEP_TIMEOUT = 3000
 
 # Button setup
 button_a = digitalio.DigitalInOut(board.D9)  # Button A pin
